@@ -167,9 +167,13 @@ namespace UnityEngine.Rendering.Universal.Internal
 
                 for (int cascadeIndex = 0; cascadeIndex < m_ShadowCasterCascadesCount; ++cascadeIndex)
                 {
-                    var splitData = settings.splitData;
-                    splitData.cullingSphere = m_CascadeSplitDistances[cascadeIndex];
-                    settings.splitData = splitData;
+                    //var splitData = settings.splitData;
+                    //splitData.cullingSphere = m_CascadeSplitDistances[cascadeIndex];
+                    //settings.splitData = splitData;
+                    
+                    // Test: keep all the parameters that were returned by call to ShadowUtils.ExtractDirectionalLightMatrix (line 103), in particular keep the splitData.cullingPlanes member instead of resetting it (as was the case in code block commented out above)
+                    settings.splitData = m_CascadeSlices[cascadeIndex].splitData;
+                    
                     Vector4 shadowBias = ShadowUtils.GetShadowBias(ref shadowLight, shadowLightIndex, ref shadowData, m_CascadeSlices[cascadeIndex].projectionMatrix, m_CascadeSlices[cascadeIndex].resolution);
                     ShadowUtils.SetupShadowCasterConstantBuffer(cmd, ref shadowLight, shadowBias);
                     ShadowUtils.RenderShadowSlice(cmd, ref context, ref m_CascadeSlices[cascadeIndex],
