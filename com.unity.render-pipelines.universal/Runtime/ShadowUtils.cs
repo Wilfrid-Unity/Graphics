@@ -11,6 +11,7 @@ namespace UnityEngine.Rendering.Universal
         public int offsetX;
         public int offsetY;
         public int resolution;
+        public ShadowSplitData splitData; // splitData contains culling information
 
         public void Clear()
         {
@@ -38,12 +39,11 @@ namespace UnityEngine.Rendering.Universal
 
         public static bool ExtractDirectionalLightMatrix(ref CullingResults cullResults, ref ShadowData shadowData, int shadowLightIndex, int cascadeIndex, int shadowmapWidth, int shadowmapHeight, int shadowResolution, float shadowNearPlane, out Vector4 cascadeSplitDistance, out ShadowSliceData shadowSliceData, out Matrix4x4 viewMatrix, out Matrix4x4 projMatrix)
         {
-            ShadowSplitData splitData;
             bool success = cullResults.ComputeDirectionalShadowMatricesAndCullingPrimitives(shadowLightIndex,
                 cascadeIndex, shadowData.mainLightShadowCascadesCount, shadowData.mainLightShadowCascadesSplit, shadowResolution, shadowNearPlane, out viewMatrix, out projMatrix,
-                out splitData);
+                out shadowSliceData.splitData);
 
-            cascadeSplitDistance = splitData.cullingSphere;
+            cascadeSplitDistance = shadowSliceData.splitData.cullingSphere;
             shadowSliceData.offsetX = (cascadeIndex % 2) * shadowResolution;
             shadowSliceData.offsetY = (cascadeIndex / 2) * shadowResolution;
             shadowSliceData.resolution = shadowResolution;
